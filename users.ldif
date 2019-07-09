@@ -23,6 +23,36 @@ m-equality: caseIgnoreMatch
 m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
 m-singleValue: TRUE
 
+dn: m-oid=1.2.840.113556.1.4.656, ou=attributetypes, cn=microsoft, ou=schema
+objectclass: metaAttributeType
+objectclass: metaTop
+objectclass: top
+m-oid: 1.2.840.113556.1.4.656
+m-name: userPrincipalName
+m-equality: caseIgnoreMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+m-singleValue: TRUE
+
+dn: m-oid=1.2.840.113556.1.4.803, ou=attributetypes, cn=microsoft, ou=schema
+objectclass: metaAttributeType
+objectclass: metaTop
+objectclass: top
+m-oid: 1.2.840.113556.1.4.803
+m-name: userAccountControl
+m-equality: caseIgnoreMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.27
+m-singleValue: TRUE
+
+dn: m-oid=1.2.840.113556.1.4.90, ou=attributetypes, cn=microsoft, ou=schema
+objectclass: metaAttributeType
+objectclass: metaTop
+objectclass: top
+m-oid: 1.2.840.113556.1.4.90
+m-name: unicodePwd
+m-equality: octetStringMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.40
+m-singleValue: TRUE
+
 dn: m-oid=1.2.840.113556.1.4.222, ou=attributetypes, cn=microsoft, ou=schema
 objectclass: metaAttributeType
 objectclass: metaTop
@@ -53,46 +83,131 @@ objectclass: metaObjectClass
 objectclass: metaTop
 objectclass: top
 m-oid: 1.2.840.113556.1.5.6
-m-name: simulatedMicrosoftSecurityPrincipal
+m-name: securityPrincipal
 m-supObjectClass: top
 m-typeObjectClass: AUXILIARY
+m-must: cn
 m-must: sAMAccountName
-m-may: memberOf
 m-must: objectCategory
+m-may: memberOf
+
+dn: m-oid=2.5.6.6.2, ou=objectclasses, cn=microsoft, ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 2.5.6.6.2
+m-name: msPerson
+m-supObjectClass: top
+m-typeObjectClass: AUXILIARY
+m-may: sn
+m-may: userPassword
+
+dn: m-oid=2.5.6.7.2, ou=objectclasses, cn=microsoft, ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: msPerson
+objectclass: top
+m-oid: 2.5.6.7.2
+m-name: msOrganisationalPerson
+m-supObjectClass: msPerson
+m-typeObjectClass: AUXILIARY
+m-may: initials
+m-may: givenName
+m-may: mail
+m-may: title
+
+dn: m-oid=1.2.840.113556.1.5.9, ou=objectclasses, cn=microsoft, ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: msOrganisationalPerson
+objectclass: top
+m-oid: 1.2.840.113556.1.5.9
+m-name: user
+m-supObjectClass: msOrganisationalPerson
+m-typeObjectClass: AUXILIARY
+m-must: cn
+m-must: sAMAccountName
+m-must: objectCategory
+m-may: userAccountControl
+m-may: userPrincipalName
+m-may: mail
+m-may: unicodePwd
 
 ############
 # Domain
 ############
-dn: dc=wimpi,dc=net
-dc: wimpi
+dn: dc=example,dc=local
+dc: example
 objectClass: top
 objectClass: domain
 
-dn: ou=users,dc=wimpi,dc=net
+dn: ou=users,dc=example,dc=local
 objectClass: organizationalUnit
 objectClass: top
 ou: users
 
-dn: uid=test,ou=users,dc=wimpi,dc=net
+dn: uid=admin,ou=users,dc=example,dc=local
 objectClass: top
 objectClass: person
 objectClass: inetOrgPerson
-objectClass: simulatedMicrosoftSecurityPrincipal
+objectClass: securityPrincipal
+objectClass: user
 objectCategory: User
-cn: Test User
-sn: test
-uid: test
-sAMAccountName: test
+cn: Admin User
+sn: Richardson
+givenName: Kevin
+uid: admin
+sAMAccountName: admin
+userPrincipalName: admin@example.local
+userAccountControl: 0
 userPassword: secret
 memberOf: admin
+mail: admin@example.local
 
-dn: ou=roles,dc=wimpi,dc=net
+dn: uid=test1,ou=users,dc=example,dc=local
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: securityPrincipal
+objectClass: user
+objectCategory: User
+cn: Test User 1
+sn: Cooper
+givenName: Anton
+initials: I
+uid: test1
+sAMAccountName: test1
+userPrincipalName: test1@example.local
+userAccountControl: 0
+userPassword: secret
+mail: test1@example.local
+
+dn: uid=test2,ou=users,dc=example,dc=local
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: securityPrincipal
+objectClass: user
+objectCategory: User
+cn: Test User 2
+sn: Bloggs
+givenName: Joe
+initials: C
+uid: test2
+sAMAccountName: test2
+userPrincipalName: test2@example.local
+userAccountControl: 0
+userPassword: secret
+mail: test2@example.local
+
+dn: ou=roles,dc=example,dc=local
 objectclass: top
 objectclass: organizationalUnit
 ou: roles
 
-dn: cn=admin,ou=roles,dc=wimpi,dc=net
+dn: cn=admin,ou=roles,dc=example,dc=local
 objectClass: top
 objectClass: groupOfNames
 cn: admin
-member: uid=test,ou=users,dc=wimpi,dc=net
+member: uid=test1,ou=users,dc=example,dc=local
+
